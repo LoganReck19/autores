@@ -87,8 +87,26 @@ def home(request: Request, db: Session = Depends(get_db)):
 @app.get("/libros", response_class=HTMLResponse)
 def books(request: Request, db: Session = Depends(get_db)):
     library = db.query(Book).join(Author).order_by(Book.id).all()
+    library_authors = db.query(Author).order_by(Author.name).all()
     template = "books.html" if request.headers.get("HX-Request") else "books-page.html"
-    return templates.TemplateResponse(request=request, name=template, context={"books": library})
+    return templates.TemplateResponse(request=request, name=template, context={"books": library, "authors": library_authors})
+
+
+@app.post("/libros", response_class=HTMLResponse)
+def create_book(
+    request: Request,
+    titulo: str = Form(...),
+    autor_id: int = Form(...),
+    anio: int = Form(...),
+    genero: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    author = db.get(Author, autor_id)
+    if author is None:
+        return HTMLResponse("<div class='alert alert-danger'>Selecciona un autor válido.</div>", status_code=400)
+    db.add(Book(title=titulo.strip(), author_id=autor_id, year=anio, genre=genero.strip()))
+    db.commit()
+    return books(request, db)
 
 
 @app.get("/autores", response_class=HTMLResponse)
