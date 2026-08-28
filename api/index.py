@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -94,7 +94,43 @@ def books(request: Request, db: Session = Depends(get_db)):
 @app.get("/autores", response_class=HTMLResponse)
 def authors(request: Request, db: Session = Depends(get_db)):
     library_authors = db.query(Author).order_by(Author.name).all()
-    return templates.TemplateResponse(request=request, name="authors.html", context={"authors": library_authors})
+    template = "authors-table.html" if request.headers.get("HX-Request") else "authors.html"
+    return templates.TemplateResponse(request=request, name=template, context={"authors": library_authors})
+
+
+@app.post("/autores", response_class=HTMLResponse)
+def create_author(request: Request, nombre: str = Form(...), pais: str = Form(...), db: Session = Depends(get_db)):
+    author = Author(name=nombre.strip(), country=pais.strip())
+    db.add(author)
+    db.commit()
+    return authors(request, db)
+
+
+@app.get("/autores/{author_id}/editar", response_class=HTMLResponse)
+def edit_author(request: Request, author_id: int, db: Session = Depends(get_db)):
+    author = db.get(Author, author_id)
+    if author is None:
+        return HTMLResponse("<tr><td colspan='5'>Autor no encontrado</td></tr>", status_code=404)
+    return templates.TemplateResponse(request=request, name="author-edit.html", context={"author": author})
+
+
+@app.post("/autores/{author_id}/editar", response_class=HTMLResponse)
+def update_author(request: Request, author_id: int, nombre: str = Form(...), pais: str = Form(...), db: Session = Depends(get_db)):
+    author = db.get(Author, author_id)
+    if author is None:
+        return HTMLResponse("<tr><td colspan='5'>Autor no encontrado</td></tr>", status_code=404)
+    author.name, author.country = nombre.strip(), pais.strip()
+    db.commit()
+    return templates.TemplateResponse(request=request, name="author-row.html", context={"author": author})
+
+
+@app.delete("/autores/{author_id}", response_class=HTMLResponse)
+def delete_author(request: Request, author_id: int, db: Session = Depends(get_db)):
+    author = db.get(Author, author_id)
+    if author is not None:
+        db.delete(author)
+        db.commit()
+    return authors(request, db)
 
 
 @app.get("/autores/{author_id}/libros", response_class=HTMLResponse)

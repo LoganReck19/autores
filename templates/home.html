@@ -1,37 +1,19 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca | Inicio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/styles.css"><script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <title>Biblioteca</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/htmx.org@2.0.10"></script>
 </head>
-<body>
-  <div class="shell">
-    <nav class="nav">
-      <a class="brand" href="/" aria-label="Biblioteca inicio"><span class="brand-mark">✦</span> Biblioteca</a>
-      <div class="nav-links"><a class="active" href="/">Inicio</a><a href="/autores">Autores</a><a href="/libros">Libros</a></div>
-      <span class="nav-note">Biblioteca abierta <span class="dot"></span></span>
-    </nav>
-    <main>
-      <section class="welcome">
-        <div class="welcome-copy">
-          <p class="eyebrow">Tu espacio de lectura</p><h1>Historias que<br><em>dejan huella.</em></h1>
-          <p class="intro">Una colección cuidada de voces, mundos y páginas para volver a descubrir. Encuentra tu próxima lectura sin prisa.</p>
-          <button class="primary-button" hx-get="/libros" hx-target="#library-panel" hx-swap="innerHTML" hx-indicator="#loading">Ver libros <span class="arrow">↗</span></button>
-          <span id="loading" class="htmx-indicator">Abriendo colección...</span>
-        </div>
-        <div class="welcome-art" aria-label="Ilustración de una pila de libros">
-          <div class="sun"></div><div class="line line-one"></div><div class="line line-two"></div>
-          <div class="book book-back"><span>ideas<br>en movimiento</span></div><div class="book book-mid"><span>the art<br>of reading</span></div><div class="book book-front"><span>libros</span></div>
-          <div class="plant"><i></i><i></i><i></i><b></b></div>
-        </div>
-      </section>
-      <section class="stats" aria-label="Resumen de la biblioteca"><div><strong>{{ book_count }}</strong><span>Libros</span></div><div><strong>{{ author_count }}</strong><span>Autores</span></div><div><strong>∞</strong><span>Posibilidades</span></div></section>
-      <section id="library-panel" class="library-panel"><div class="empty-state"><span class="small-spark">✦</span><h2>La colección te espera</h2><p>Pulsa “Ver libros” para desplegar las obras disponibles aquí mismo.</p></div></section>
-    </main>
-    <footer><span>© 2026 Biblioteca</span><span>Hecho para leer mejor</span></footer>
+<body class="bg-light">
+  <div class="container py-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4"><div class="container-fluid"><a class="navbar-brand" href="/">Biblioteca</a><ul class="navbar-nav"><li class="nav-item"><a class="nav-link active" href="/">Inicio</a></li><li class="nav-item"><a class="nav-link" href="/autores">Autores</a></li><li class="nav-item"><a class="nav-link" href="/libros">Libros</a></li></ul></div></nav>
+    <div id="contenido">
+      <div class="p-5 mb-4 bg-white border rounded-3"><div class="container-fluid py-3"><h1 class="display-5 fw-bold">Bienvenido a la biblioteca</h1><p class="col-md-8 fs-5">Explora nuestra colección de libros y conoce a los autores que les dieron vida.</p><button class="btn btn-primary btn-lg" hx-get="/libros" hx-target="#coleccion" hx-swap="innerHTML">Ver libros</button></div></div>
+      <div class="row g-3 mb-4"><div class="col-md-6"><div class="card"><div class="card-body"><h5 class="card-title">Libros disponibles</h5><p class="display-6 mb-0">{{ book_count }}</p></div></div></div><div class="col-md-6"><div class="card"><div class="card-body"><h5 class="card-title">Autores registrados</h5><p class="display-6 mb-0">{{ author_count }}</p></div></div></div></div>
+      <div id="coleccion"></div>
+    </div>
   </div>
 </body>
 </html>
