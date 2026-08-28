@@ -95,3 +95,11 @@ def books(request: Request, db: Session = Depends(get_db)):
 def authors(request: Request, db: Session = Depends(get_db)):
     library_authors = db.query(Author).order_by(Author.name).all()
     return templates.TemplateResponse(request=request, name="authors.html", context={"authors": library_authors})
+
+
+@app.get("/autores/{author_id}/libros", response_class=HTMLResponse)
+def author_books(request: Request, author_id: int, db: Session = Depends(get_db)):
+    author = db.get(Author, author_id)
+    if author is None:
+        return HTMLResponse("<tr><td colspan='5'>Autor no encontrado</td></tr>", status_code=404)
+    return templates.TemplateResponse(request=request, name="author-books.html", context={"author": author})
