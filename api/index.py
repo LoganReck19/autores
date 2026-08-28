@@ -109,6 +109,16 @@ def create_book(
     return books(request, db)
 
 
+@app.delete("/libros/{book_id}", response_class=HTMLResponse)
+def delete_book(request: Request, book_id: int, db: Session = Depends(get_db)):
+    book = db.get(Book, book_id)
+    if book is None:
+        return HTMLResponse("<div class='alert alert-danger'>Libro no encontrado.</div>", status_code=404)
+    db.delete(book)
+    db.commit()
+    return books(request, db)
+
+
 @app.get("/autores", response_class=HTMLResponse)
 def authors(request: Request, db: Session = Depends(get_db)):
     library_authors = db.query(Author).order_by(Author.name).all()

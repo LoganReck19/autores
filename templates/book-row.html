@@ -1,0 +1,1 @@
+<tr><td>{{ book.id }}</td><td>{{ book.title }}</td><td>{{ book.author.name }}</td><td>{{ book.year }}</td><td>{{ book.genre }}</td><td class="text-end"><button class="btn btn-sm btn-outline-danger" hx-delete="/libros/{{ book.id }}" hx-target="#tabla-libros" hx-swap="outerHTML" hx-confirm="¿Borrar este libro?">Borrar</button></td></tr>
