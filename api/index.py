@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 from fastapi import Depends, FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
@@ -9,10 +10,13 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, rela
 
 # La aplicación vive dentro de api/, por eso la raíz del proyecto es su carpeta padre.
 BASE_DIR = Path(__file__).resolve().parent.parent
-# SQLite mantiene los datos localmente y funciona sin configuración adicional.
-DATABASE_URL = f"sqlite:///{BASE_DIR / 'biblioteca.db'}"
-# check_same_thread permite usar la conexión con las solicitudes de FastAPI.
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+# Vercel permite escribir en /tmp; para datos persistentes se puede configurar una
+# base externa mediante DATABASE_URL.
+DATABASE_URL = os.getenv("DATABASE_URL") or (
+    "sqlite:////tmp/biblioteca.db" if os.getenv("VERCEL") else f"sqlite:///{BASE_DIR / 'biblioteca.db'}"
+)
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
 # Cada solicitud obtiene una sesión independiente para consultar o modificar la base.
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 # Jinja busca aquí las páginas completas y los fragmentos que devuelve HTMX.
