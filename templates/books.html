@@ -1,0 +1,6 @@
+<div class="library-loaded">
+  <div class="section-heading"><div><p class="eyebrow">Selección actual</p><h2>Libros para perderse</h2></div><span class="count-label">{{ books|length }} títulos</span></div>
+  <div class="book-grid">
+    {% for book in books %}<article class="book-card"><div class="book-index">{{ "%02d"|format(loop.index) }}</div><div class="book-details"><h3>{{ book.title }}</h3><p>{{ book.author.name }} · {{ book.year }}</p><span class="genre">{{ book.genre }}</span></div><span class="card-arrow">↗</span></article>{% endfor %}
+  </div>
+</div>

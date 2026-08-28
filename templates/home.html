@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca | Inicio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css"><script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+<body>
+  <div class="shell">
+    <nav class="nav">
+      <a class="brand" href="/" aria-label="Biblioteca inicio"><span class="brand-mark">✦</span> Biblioteca</a>
+      <div class="nav-links"><a class="active" href="/">Inicio</a><a href="/autores">Autores</a><a href="/libros">Libros</a></div>
+      <span class="nav-note">Biblioteca abierta <span class="dot"></span></span>
+    </nav>
+    <main>
+      <section class="welcome">
+        <div class="welcome-copy">
+          <p class="eyebrow">Tu espacio de lectura</p><h1>Historias que<br><em>dejan huella.</em></h1>
+          <p class="intro">Una colección cuidada de voces, mundos y páginas para volver a descubrir. Encuentra tu próxima lectura sin prisa.</p>
+          <button class="primary-button" hx-get="/libros" hx-target="#library-panel" hx-swap="innerHTML" hx-indicator="#loading">Ver libros <span class="arrow">↗</span></button>
+          <span id="loading" class="htmx-indicator">Abriendo colección...</span>
+        </div>
+        <div class="welcome-art" aria-label="Ilustración de una pila de libros">
+          <div class="sun"></div><div class="line line-one"></div><div class="line line-two"></div>
+          <div class="book book-back"><span>ideas<br>en movimiento</span></div><div class="book book-mid"><span>the art<br>of reading</span></div><div class="book book-front"><span>libros</span></div>
+          <div class="plant"><i></i><i></i><i></i><b></b></div>
+        </div>
+      </section>
+      <section class="stats" aria-label="Resumen de la biblioteca"><div><strong>{{ book_count }}</strong><span>Libros</span></div><div><strong>{{ author_count }}</strong><span>Autores</span></div><div><strong>∞</strong><span>Posibilidades</span></div></section>
+      <section id="library-panel" class="library-panel"><div class="empty-state"><span class="small-spark">✦</span><h2>La colección te espera</h2><p>Pulsa “Ver libros” para desplegar las obras disponibles aquí mismo.</p></div></section>
+    </main>
+    <footer><span>© 2026 Biblioteca</span><span>Hecho para leer mejor</span></footer>
+  </div>
+</body>
+</html>
